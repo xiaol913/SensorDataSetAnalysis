@@ -2,6 +2,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.externals import joblib
 
 
 # normalize
@@ -53,4 +54,9 @@ for i in range(0, len(result)):
     if result['Activity'][i] == result_data['Activity'][i]:
         count += 1
 
-print float(count) / float(len(result))
+rate = float(count) / float(len(result))
+print(rate)
+
+# save clf
+if rate > 0.9:
+    joblib.dump(clf, 'feature.pkl')
