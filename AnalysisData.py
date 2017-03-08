@@ -1,84 +1,60 @@
-import glob
-
+# coding=utf-8
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 
-
-def read_data_train(files, activity):
-    column_names = ['AccelerometerX', 'AccelerometerY', 'AccelerometerZ', 'GyroscopeX', 'GyroscopeY', 'GyroscopeZ',
-                    'GravityX', 'GravityY', 'GravityZ', 'Timestamp', 'Activity']
-    df = pd.DataFrame()
-    n = 0
-    for i in range(0, len(files) / 2):
-        df1 = pd.read_csv(files[i], header=None, names=column_names)
-        for j in range(0, len(df1)):
-            n += 20
-            df1['Timestamp'][j] = n
-            df1['Activity'][j] = activity
-
-        # transform type to int
-        df1['Activity'] = df1['Activity'].astype(int)
-        df = df.append(df1, ignore_index=True)
-
-    return df
+# 绘图使用 ggplot 的 style
+plt.style.use('ggplot')
 
 
-def read_data_test_no_result(files):
-    column_names = ['AccelerometerX', 'AccelerometerY', 'AccelerometerZ', 'GyroscopeX', 'GyroscopeY', 'GyroscopeZ',
-                    'GravityX', 'GravityY', 'GravityZ']
-    df = pd.DataFrame()
-    for i in range(len(files) / 2, len(files)):
-        df1 = pd.read_csv(files[i], header=None, names=column_names)
-        df = df.append(df1, ignore_index=True)
-
-    return df
+# 数据标准化
+def feature_normalize(dataset):
+    mu = np.mean(dataset, axis=0)
+    sigma = np.std(dataset, axis=0)
+    return (dataset - mu) / sigma
 
 
-def read_data_test(files, activity):
-    column_names = ['AccelerometerX', 'AccelerometerY', 'AccelerometerZ', 'GyroscopeX', 'GyroscopeY', 'GyroscopeZ',
-                    'GravityX', 'GravityY', 'GravityZ', 'Activity']
-    df = pd.DataFrame()
-    for i in range(len(files) / 2, len(files)):
-        df1 = pd.read_csv(files[i], header=None, names=column_names)
-        for j in range(0, len(df1)):
-            df1['Activity'][j] = activity
-
-        # transform type to int
-        df1['Activity'] = df1['Activity'].astype(int)
-        df = df.append(df1, ignore_index=True)
-
-    return df
+# # 绘图
+def plot_axis(ax, x, y, title):
+    ax.plot(x, y)
+    ax.set_title(title)
+    ax.xaxis.set_visible(False)
+    ax.set_ylim([min(y) - np.std(y), max(y) + np.std(y)])
+    ax.set_xlim([min(x), max(x)])
+    ax.grid(True)
 
 
-InVehicle = glob.glob("./InVehicle/*")
-Still = glob.glob("./Still/*")
-Walking = glob.glob("./Walking/*")
+# # 为给定的行为画出一段时间（180 × 50ms）的波形图
+def plot_activity(activity, data):
+    fig, (ax0, ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8) = plt.subplots(nrows=9, figsize=(15, 10), sharex=True)
+    plot_axis(ax0, data['Timestamp'], data['AccelerometerX'], 'AccelerometerX')
+    plot_axis(ax1, data['Timestamp'], data['AccelerometerY'], 'AccelerometerY')
+    plot_axis(ax2, data['Timestamp'], data['AccelerometerZ'], 'AccelerometerZ')
+    plot_axis(ax3, data['Timestamp'], data['GyroscopeX'], 'GyroscopeX')
+    plot_axis(ax4, data['Timestamp'], data['GyroscopeY'], 'GyroscopeY')
+    plot_axis(ax5, data['Timestamp'], data['GyroscopeZ'], 'GyroscopeZ')
+    plot_axis(ax6, data['Timestamp'], data['GravityX'], 'GravityX')
+    plot_axis(ax7, data['Timestamp'], data['GravityY'], 'GravityY')
+    plot_axis(ax8, data['Timestamp'], data['GravityZ'], 'GravityZ')
+    plt.subplots_adjust(hspace=0.2)
+    fig.suptitle(activity)
+    plt.subplots_adjust(top=0.90)
+    plt.show()
 
-# combine train data
-train_data = pd.DataFrame()
-train_vd = read_data_train(InVehicle, 0)
-train_sd = read_data_train(Still, 1)
-train_wd = read_data_train(Walking, 2)
-train_data = train_data.append(train_vd)
-train_data = train_data.append(train_sd)
-train_data = train_data.append(train_wd)
-train_data.to_csv('train_data.csv')
 
-# combine test data
-test_data = pd.DataFrame()
-test_vd = read_data_test_no_result(InVehicle)
-test_sd = read_data_test_no_result(Still)
-test_wd = read_data_test_no_result(Walking)
-test_data = test_data.append(test_vd)
-test_data = test_data.append(test_sd)
-test_data = test_data.append(test_wd)
-train_data.to_csv('test_data.csv')
+data_set = pd.read_csv('train_data.csv')
 
-# combine result data
-result_data = pd.DataFrame()
-result_vd = read_data_test(InVehicle, 0)
-result_sd = read_data_test(Still, 1)
-result_wd = read_data_test(Walking, 2)
-result_data = result_data.append(result_vd)
-result_data = result_data.append(result_sd)
-result_data = result_data.append(result_wd)
-train_data.to_csv('result_data.csv')
+data_set['AccelerometerX'] = feature_normalize(data_set['AccelerometerX'])
+data_set['AccelerometerY'] = feature_normalize(data_set['AccelerometerY'])
+data_set['AccelerometerZ'] = feature_normalize(data_set['AccelerometerZ'])
+data_set['GyroscopeX'] = feature_normalize(data_set['GyroscopeX'])
+data_set['GyroscopeY'] = feature_normalize(data_set['GyroscopeY'])
+data_set['GyroscopeZ'] = feature_normalize(data_set['GyroscopeZ'])
+data_set['GravityX'] = feature_normalize(data_set['GravityX'])
+data_set['GravityY'] = feature_normalize(data_set['GravityY'])
+data_set['GravityZ'] = feature_normalize(data_set['GravityZ'])
+
+# 为每个行为绘图
+for activity in np.unique(data_set["Activity"]):
+    subset = data_set[data_set["Activity"] == activity][:500]
+    plot_activity(activity, subset)
