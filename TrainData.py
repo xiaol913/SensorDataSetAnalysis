@@ -3,9 +3,13 @@ import numpy as np
 import pandas as pd
 from sklearn import linear_model
 from sklearn.externals import joblib
+from sklearn2pmml import PMMLPipeline
+from sklearn2pmml import sklearn2pmml
 
 
 # normalize
+
+
 def feature_normalize(data_set):
     mu = np.mean(data_set, axis=0)
     sigma = np.std(data_set, axis=0)
@@ -63,3 +67,8 @@ print(rate)
 if rate > 0.8919:
     result.to_csv('result.csv', index=False)
     joblib.dump(clf, 'feature.pkl')
+    # save as PMML
+    pipeline = PMMLPipeline([
+        ("Activity", clf)
+    ])
+    sklearn2pmml(pipeline, "result.pmml")
