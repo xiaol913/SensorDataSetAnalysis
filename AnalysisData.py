@@ -14,7 +14,7 @@ def feature_normalize(dataset):
     return (dataset - mu) / sigma
 
 
-# # 绘图
+# 绘图
 def plot_axis(ax, x, y, title):
     ax.plot(x, y)
     ax.set_title(title)
@@ -24,7 +24,7 @@ def plot_axis(ax, x, y, title):
     ax.grid(True)
 
 
-# # 为给定的行为画出一段时间（180 × 50ms）的波形图
+# 为给定的行为画出一段时间（180 × 50ms）的波形图
 def plot_activity(activity, data):
     fig, (ax0, ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8) = plt.subplots(nrows=9, figsize=(15, 10), sharex=True)
     plot_axis(ax0, data['Timestamp'], data['AccelerometerX'], 'AccelerometerX')

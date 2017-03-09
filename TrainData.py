@@ -1,15 +1,16 @@
 # coding=utf-8
 import numpy as np
 import pandas as pd
+from sklearn.neighbors import KNeighborsRegressor
 from sklearn import linear_model
 from sklearn.externals import joblib
 from sklearn2pmml import PMMLPipeline
 from sklearn2pmml import sklearn2pmml
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestRegressor
 
 
 # normalize
-
-
 def feature_normalize(data_set):
     mu = np.mean(data_set, axis=0)
     sigma = np.std(data_set, axis=0)
@@ -30,27 +31,46 @@ def normalize_data(data_set):
     return data_set
 
 
+def double_data(data_set):
+    return data_set ** 2
+
+
+# analysis data
+def new_function(data_set):
+    data_set['AccelerometerX'] = double_data(data_set['AccelerometerX'])
+    data_set['AccelerometerY'] = double_data(data_set['AccelerometerY'])
+    data_set['AccelerometerZ'] = double_data(data_set['AccelerometerZ'])
+    data_set['GyroscopeX'] = double_data(data_set['GyroscopeX'])
+    data_set['GyroscopeY'] = double_data(data_set['GyroscopeY'])
+    data_set['GyroscopeZ'] = double_data(data_set['GyroscopeZ'])
+    data_set['GravityX'] = double_data(data_set['GravityX'])
+    data_set['GravityY'] = double_data(data_set['GravityY'])
+    data_set['GravityZ'] = double_data(data_set['GravityZ'])
+    return data_set
+
+
 train_data = pd.read_csv('train_data.csv')
 test_data = pd.read_csv('test_data.csv')
 result_data = pd.read_csv('result_data.csv')
 
-train_data = normalize_data(train_data)
-test_data = normalize_data(test_data)
+# train_data = normalize_data(train_data)
+# test_data = normalize_data(test_data)
+# train_data = new_function(train_data)
+# test_data = new_function(test_data)
+
 
 # training data
-train = train_data.filter(regex='Accelerometer*|Gyroscope*|Gravity*|Activity')
+train = train_data.filter(regex='Accelerometer|Activity')
 train_np = train.values
 y = train_np[:, -1]
 X = train_np[:, :-1]
-
-clf = linear_model.SGDClassifier(alpha=0.01, average=False, class_weight=None, epsilon=0.1,
-                                 eta0=0.0, fit_intercept=True, l1_ratio=0.15,
-                                 learning_rate='optimal', loss='hinge', n_iter=10, n_jobs=1,
-                                 penalty='l2', power_t=0.5, random_state=None, shuffle=True,
-                                 verbose=0, warm_start=False)
+clf = linear_model.RidgeClassifier(alpha=0.001, fit_intercept=True, normalize=True,
+                                   copy_X=True, max_iter=1000, tol=0.000001,
+                                   class_weight=None, solver='auto', random_state=None)
+# 8713
 clf.fit(X, y)
 
-test = test_data.filter(regex='Accelerometer*|Gyroscope*|Gravity*')
+test = test_data.filter(regex='Accelerometer')
 predictions = clf.predict(test)
 result = pd.DataFrame({'Activity': predictions.astype(np.int32)})
 
@@ -64,7 +84,7 @@ rate = count / len(result)
 print(rate)
 
 # save clf
-if rate > 0.8919:
+if rate > 0.86:
     result.to_csv('result.csv', index=False)
     joblib.dump(clf, 'feature.pkl')
     # save as PMML
