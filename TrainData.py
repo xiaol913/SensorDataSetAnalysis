@@ -87,8 +87,3 @@ print(rate)
 if rate > 0.86:
     result.to_csv('result.csv', index=False)
     joblib.dump(clf, 'feature.pkl')
-    # save as PMML
-    pipeline = PMMLPipeline([
-        ("Activity", clf)
-    ])
-    sklearn2pmml(pipeline, "result.pmml")
