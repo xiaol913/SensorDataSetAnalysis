@@ -63,7 +63,7 @@ for i in range(0, len(result)):
 rate = count / len(result)
 print(rate)
 
-if rate > 0.857:
+if rate > 0.8574:
     result.to_csv('result.csv', index=False)
     # joblib.dump(train_pipeline, "newPKL.pkl.z", compress=9)
     # save as PMML

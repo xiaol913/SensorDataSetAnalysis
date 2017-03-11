@@ -2,7 +2,7 @@
 <PMML xmlns="http://www.dmg.org/PMML-4_3" version="4.3">
 	<Header>
 		<Application name="JPMML-SkLearn" version="1.2.10"/>
-		<Timestamp>2017-03-11T17:19:14Z</Timestamp>
+		<Timestamp>2017-03-11T17:20:48Z</Timestamp>
 	</Header>
 	<MiningBuildTask>
 		<Extension>PMMLPipeline(steps=[('mapper', DataFrameMapper(default=False, df_out=False,
@@ -10,7 +10,7 @@
         sparse=False)),
        ('pca', PCA(copy=True, iterated_power='auto', n_components=4, random_state=None,
   svd_solver='auto', tol=0.0, whiten=False)),
-       ('selector', SelectKBest(k=4, score_func=&lt;function f_classif at 0x0000018539C640D0&gt;)),
+       ('selector', SelectKBest(k=4, score_func=&lt;function f_classif at 0x000001A4C04140D0&gt;)),
        ('classifier', SGDClassifier(alpha=0.01, average=False, class_weight=None, epsilon=0.1,
        eta0=0.0, fit_intercept=True, l1_ratio=0.15,
        learning_rate='optimal', loss='hinge', n_iter=5, n_jobs=1,
@@ -210,23 +210,23 @@
 			<MiningField name="AccelerometerZ" missingValueTreatment="asIs"/>
 			<MiningField name="Accelerometer_value" missingValueTreatment="asIs"/>
 		</MiningSchema>
-		<RegressionTable intercept="-0.6309362994014854" targetCategory="0">
-			<NumericPredictor name="pca(1)[0]" coefficient="-0.42907034005593436"/>
-			<NumericPredictor name="pca(1)[1]" coefficient="-0.11869382373065374"/>
-			<NumericPredictor name="pca(1)[2]" coefficient="-0.30203901685395595"/>
-			<NumericPredictor name="pca(1)[3]" coefficient="-4.405850284830822"/>
+		<RegressionTable intercept="-0.6250558798392306" targetCategory="0">
+			<NumericPredictor name="pca(1)[0]" coefficient="-0.4276506749220281"/>
+			<NumericPredictor name="pca(1)[1]" coefficient="-0.12714439633823207"/>
+			<NumericPredictor name="pca(1)[2]" coefficient="-0.2995078749611553"/>
+			<NumericPredictor name="pca(1)[3]" coefficient="-4.408643013932551"/>
 		</RegressionTable>
-		<RegressionTable intercept="-0.5134843739032118" targetCategory="1">
-			<NumericPredictor name="pca(1)[0]" coefficient="-0.6324414007412611"/>
-			<NumericPredictor name="pca(1)[1]" coefficient="0.5711189082571115"/>
-			<NumericPredictor name="pca(1)[2]" coefficient="0.1559787471472637"/>
-			<NumericPredictor name="pca(1)[3]" coefficient="1.415814832834106"/>
+		<RegressionTable intercept="-0.50719778247101" targetCategory="1">
+			<NumericPredictor name="pca(1)[0]" coefficient="-0.6379049127233016"/>
+			<NumericPredictor name="pca(1)[1]" coefficient="0.5460625560804557"/>
+			<NumericPredictor name="pca(1)[2]" coefficient="0.14442389279790172"/>
+			<NumericPredictor name="pca(1)[3]" coefficient="1.419761074243942"/>
 		</RegressionTable>
-		<RegressionTable intercept="-0.37616318892577966" targetCategory="2">
-			<NumericPredictor name="pca(1)[0]" coefficient="0.6493405205177544"/>
-			<NumericPredictor name="pca(1)[1]" coefficient="-0.3186783924520246"/>
-			<NumericPredictor name="pca(1)[2]" coefficient="0.02762807341455385"/>
-			<NumericPredictor name="pca(1)[3]" coefficient="1.9738002689477618"/>
+		<RegressionTable intercept="-0.3778230123197779" targetCategory="2">
+			<NumericPredictor name="pca(1)[0]" coefficient="0.6476062952855914"/>
+			<NumericPredictor name="pca(1)[1]" coefficient="-0.31757925891705063"/>
+			<NumericPredictor name="pca(1)[2]" coefficient="0.0268077229697319"/>
+			<NumericPredictor name="pca(1)[3]" coefficient="1.9727648288221316"/>
 		</RegressionTable>
 	</RegressionModel>
 </PMML>
