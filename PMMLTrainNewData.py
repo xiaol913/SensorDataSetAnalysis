@@ -46,9 +46,9 @@ def new_function(data_set):
     data_set['Gravity_value'] = data_set['GravityX'] ** 2 + \
                                       data_set['GravityY'] ** 2 + \
                                       data_set['GravityZ'] ** 2
-    data_set['LinearX'] = abs(data_set['AccelerometerX']) - abs(data_set['GravityX'])
-    data_set['LinearY'] = abs(data_set['AccelerometerY']) - abs(data_set['GravityY'])
-    data_set['LinearZ'] = abs(data_set['AccelerometerZ']) - abs(data_set['GravityZ'])
+    data_set['LinearX'] = abs(data_set['AccelerometerX'] - data_set['GravityX'])
+    data_set['LinearY'] = abs(data_set['AccelerometerY'] - data_set['GravityY'])
+    data_set['LinearZ'] = abs(data_set['AccelerometerZ'] - data_set['GravityZ'])
     data_set['Linear_value'] = data_set['LinearX'] ** 2 + \
                                 data_set['LinearY'] ** 2 + \
                                 data_set['LinearZ'] ** 2
@@ -93,8 +93,8 @@ print(score)
 y_pred = predictions.predict(X_test)
 print(metrics.confusion_matrix(y_test, y_pred))
 
-# if score > .919:
-#     sklearn2pmml(predictions, "./models/MLPClassifier.pmml")
+if score > .941:
+    sklearn2pmml(predictions, "./models/MLPClassifier.pmml")
 
 # neighbors.KNeighborsClassifier        Accuracy: 0.74 (+/- 0.15)   0.931170064721
 # ensemble.RandomForestClassifier       Accuracy: 0.73 (+/- 0.16)   0.928357373742
