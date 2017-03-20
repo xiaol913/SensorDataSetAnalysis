@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JsBowerSettings">
+    <exe-path />
+    <config-path />
+  </component>
+  <component name="JsFlowSettings">
+    <service-enabled>false</service-enabled>
+    <exe-path />
+    <annotation-enable>false</annotation-enable>
+    <other-services-enabled>false</other-services-enabled>
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>AOP</id>
+          </State>
+          <State>
+            <id>Android</id>
+          </State>
+          <State>
+            <id>Android &gt; Lint &gt; Correctness</id>
+          </State>
+          <State>
+            <id>Android &gt; Lint &gt; Correctness &gt; Messages</id>
+          </State>
+          <State>
+            <id>Android &gt; Lint &gt; Performance</id>
+          </State>
+          <State>
+            <id>Android &gt; Lint &gt; Usability</id>
+          </State>
+          <State>
+            <id>Android Lint for Kotlin</id>
+          </State>
+          <State>
+            <id>Finalization issuesJava</id>
+          </State>
+          <State>
+            <id>Groovy</id>
+          </State>
+          <State>
+            <id>ImportsJava</id>
+          </State>
+          <State>
+            <id>JUnit issuesJava</id>
+          </State>
+          <State>
+            <id>Java</id>
+          </State>
+          <State>
+            <id>Java language level migration aidsJava</id>
+          </State>
+          <State>
+            <id>Memory issuesJava</id>
+          </State>
+          <State>
+            <id>Plugin DevKit</id>
+          </State>
+          <State>
+            <id>Probable bugsGroovy</id>
+          </State>
+          <State>
+            <id>Threading issuesJava</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>Android</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
+  <component name="SvnConfiguration">
+    <configuration>C:\Users\ShawnG\AppData\Roaming\Subversion</configuration>
+  </component>
+</project>
