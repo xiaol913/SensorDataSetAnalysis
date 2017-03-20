@@ -62,8 +62,9 @@ train_pipeline = PMMLPipeline([
     ("classifier", MLPClassifier(activation='relu'))
 ])
 # tanh = .9555  logistic = .9476    identity = .7177    relu = .
-# predictions = cross_val_predict(train_pipeline, X, y.values.ravel(), cv=10)
+# predictions = cross_val_predict(train_pipeline, X, y.values.ravel(), cv=2)
 # print(metrics.accuracy_score(y.values.ravel(), predictions))
+# print(metrics.confusion_matrix(y.values.ravel(), predictions))
 # scores = cross_val_score(train_pipeline, X, y.values.ravel(), cv=10)
 # print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 X_train, X_test, y_train, y_test = train_test_split(X, y.values.ravel(),
@@ -72,5 +73,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y.values.ravel(),
 predictions = train_pipeline.fit(X_train, y_train)
 score = predictions.score(X_test, y_test)
 print(score)
+y_pred = predictions.predict(X_test)
+print(metrics.confusion_matrix(y_test, y_pred))
 if score > .95:
     sklearn2pmml(predictions, "MLPClassifier.pmml", with_repr=True)
