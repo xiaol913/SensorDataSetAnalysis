@@ -36,7 +36,7 @@ public class PmmlTest {
     }
 
     public static void main(String[] args) throws Exception {
-        InputStream is = new FileInputStream("F:\\PythonEXP\\SensorDataSetAnalysis\\RandomForestClassifier.pmml");
+        InputStream is = new FileInputStream("F:\\PythonEXP\\SensorDataSetAnalysis\\models\\MLPClassifier.pmml");
         PMML pmml = org.jpmml.model.PMMLUtil.unmarshal(is);
         ModelEvaluatorFactory modelEvaluatorFactory = ModelEvaluatorFactory.newInstance();
         ModelEvaluator<?> modelEvaluator = modelEvaluatorFactory.newModelEvaluator(pmml);

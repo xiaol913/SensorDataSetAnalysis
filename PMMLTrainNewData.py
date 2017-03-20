@@ -10,12 +10,16 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import cross_val_predict
 from sklearn import metrics
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
 
-# ensemble.RandomForestClassifier   Accuracy: 0.80 (+/- 0.17)   Accuracy: 0.84 (+/- 0.22)
-# neighbors.KNeighborsClassifier    Accuracy: 0.80 (+/- 0.12)   Accuracy: 0.84 (+/- 0.19)
-# neural_network.MLPClassifier      Accuracy: 0.80 (+/- 0.18)   Accuracy: 0.86 (+/- 0.16)
+# neighbors.KNeighborsClassifier    Accuracy: 0.80 (+/- 0.12)   Accuracy: 0.84 (+/- 0.19)   0.975561985966
+# ensemble.RandomForestClassifier   Accuracy: 0.80 (+/- 0.17)   Accuracy: 0.84 (+/- 0.22)   0.974509067615
+# ensemble.GradientBoostingClassifier   Accuracy: 0.78 (+/- 0.19)                           0.944990538461
+# ensemble.BaggingClassifier        Accuracy: 0.78 (+/- 0.13)   Accuracy: 0.85 (+/- 0.18)   0.972528403025
+# tree.ExtraTreeClassifier          Accuracy: 0.76 (+/- 0.13)   Accuracy: 0.81 (+/- 0.23)   0.960695956941
+# tree.DecisionTreeClassifier       Accuracy: 0.76 (+/- 0.13)   Accuracy: 0.83 (+/- 0.20)   0.95448152975
+# neural_network.MLPClassifier      Accuracy: 0.80 (+/- 0.18)   Accuracy: 0.86 (+/- 0.16)   0.9495777282
 
 
 def double_data(data_set):
@@ -47,33 +51,46 @@ def new_function(data_set):
 raw_data = pd.read_csv('raw_data.csv')
 raw_data = new_function(raw_data)
 X = raw_data[['AccelerometerX', 'AccelerometerY', 'AccelerometerZ', 'Accelerometer_value',
-              'GyroscopeX', 'GyroscopeY', 'GyroscopeZ', 'Gyroscope_value', 'GravityX',
-              'GravityY', 'GravityZ', 'Gravity_value']]
+              'GyroscopeX', 'GyroscopeY', 'GyroscopeZ', 'Gyroscope_value',
+              'GravityX', 'GravityY', 'GravityZ', 'Gravity_value']]
+# X = raw_data[['AccelerometerX', 'AccelerometerY', 'AccelerometerZ', 'Accelerometer_value',
+#               # 'Gyroscope_value',
+#               # 'Gravity_value'
+#               ]]
 y = raw_data[['Activity']]
 train_pipeline = PMMLPipeline([
     ("mapper", DataFrameMapper([
         (['AccelerometerX', 'AccelerometerY', 'AccelerometerZ', 'Accelerometer_value',
           'GyroscopeX', 'GyroscopeY', 'GyroscopeZ', 'Gyroscope_value',
-          'GravityX', 'GravityY', 'GravityZ', 'Gravity_value'],
+          'GravityX', 'GravityY', 'GravityZ', 'Gravity_value'
+          ],
          [ContinuousDomain(), StandardScaler()])
     ])),
     ("pca", PCA(n_components=12)),
     ("selector", SelectKBest(k=12)),
-    ("classifier", RandomForestClassifier())
+    ("classifier", MLPClassifier())
 ])
-# tanh = .9555  logistic = .9476    identity = .7177    relu = .
 # predictions = cross_val_predict(train_pipeline, X, y.values.ravel(), cv=10)
 # print(metrics.accuracy_score(y.values.ravel(), predictions))
 # print(metrics.confusion_matrix(y.values.ravel(), predictions))
-# scores = cross_val_score(train_pipeline, X, y.values.ravel(), cv=10)
+
+# scores = cross_val_score(train_pipeline, X, y.values.ravel(), cv=5)
 # print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
-X_train, X_test, y_train, y_test = train_test_split(X, y.values.ravel(),
-                                                    test_size=0.3, random_state=0)
-# .2 = .9753    .25 = .9744    .3 = .9745   .35 = .9733    .4 = .9733   .45 = .9721     .5 = .9719
+
+X_train, X_test, y_train, y_test = train_test_split(X, y.values.ravel(), test_size=0.3, random_state=0)
 predictions = train_pipeline.fit(X_train, y_train)
 score = predictions.score(X_test, y_test)
 print(score)
 y_pred = predictions.predict(X_test)
 print(metrics.confusion_matrix(y_test, y_pred))
-if score > .974:
-    sklearn2pmml(predictions, "RandomForestClassifier.pmml", with_repr=True)
+
+if score > .919:
+    sklearn2pmml(predictions, "./models/MLPClassifier.pmml")
+
+# neighbors.KNeighborsClassifier        Accuracy: 0.74 (+/- 0.15)   0.931170064721
+# ensemble.RandomForestClassifier       Accuracy: 0.73 (+/- 0.16)   0.928357373742
+# ensemble.BaggingClassifier            Accuracy: 0.73 (+/- 0.16)   0.927665245595
+# ensemble.GradientBoostingClassifier   Accuracy: 0.68 (+/- 0.23)   0.911098348464
+# tree.ExtraTreeClassifier              Accuracy: 0.72 (+/- 0.17)   0.910141149964
+# tree.DecisionTreeClassifier           Accuracy: 0.72 (+/- 0.17)   0.911834655004
+# neural_network.MLPClassifier          Accuracy: 0.75 (+/- 0.14)   0.918638127425
