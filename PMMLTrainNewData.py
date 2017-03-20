@@ -10,12 +10,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import cross_val_predict
 from sklearn import metrics
-from sklearn.neural_network import MLPClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 
-# ensemble.RandomForestClassifier   84571   Accuracy: 0.80 (+/- 0.17)   Accuracy: 0.84 (+/- 0.22)
-# neighbors.KNeighborsClassifier    83675   Accuracy: 0.80 (+/- 0.12)   Accuracy: 0.84 (+/- 0.19)
-# neural_network.MLPClassifier      86019   Accuracy: 0.80 (+/- 0.18)   Accuracy: 0.86 (+/- 0.16)
+# ensemble.RandomForestClassifier   Accuracy: 0.80 (+/- 0.17)   Accuracy: 0.84 (+/- 0.22)
+# neighbors.KNeighborsClassifier    Accuracy: 0.80 (+/- 0.12)   Accuracy: 0.84 (+/- 0.19)
+# neural_network.MLPClassifier      Accuracy: 0.80 (+/- 0.18)   Accuracy: 0.86 (+/- 0.16)
 
 
 def double_data(data_set):
@@ -59,21 +59,21 @@ train_pipeline = PMMLPipeline([
     ])),
     ("pca", PCA(n_components=12)),
     ("selector", SelectKBest(k=12)),
-    ("classifier", MLPClassifier(activation='relu'))
+    ("classifier", RandomForestClassifier())
 ])
 # tanh = .9555  logistic = .9476    identity = .7177    relu = .
-# predictions = cross_val_predict(train_pipeline, X, y.values.ravel(), cv=2)
+# predictions = cross_val_predict(train_pipeline, X, y.values.ravel(), cv=10)
 # print(metrics.accuracy_score(y.values.ravel(), predictions))
 # print(metrics.confusion_matrix(y.values.ravel(), predictions))
 # scores = cross_val_score(train_pipeline, X, y.values.ravel(), cv=10)
 # print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 X_train, X_test, y_train, y_test = train_test_split(X, y.values.ravel(),
                                                     test_size=0.3, random_state=0)
-# .25 = .95260  .29 = .95083  .3 = .95603  .35 = .95310
+# .2 = .9753    .25 = .9744    .3 = .9745   .35 = .9733    .4 = .9733   .45 = .9721     .5 = .9719
 predictions = train_pipeline.fit(X_train, y_train)
 score = predictions.score(X_test, y_test)
 print(score)
 y_pred = predictions.predict(X_test)
 print(metrics.confusion_matrix(y_test, y_pred))
-if score > .95:
-    sklearn2pmml(predictions, "MLPClassifier.pmml", with_repr=True)
+if score > .974:
+    sklearn2pmml(predictions, "RandomForestClassifier.pmml", with_repr=True)

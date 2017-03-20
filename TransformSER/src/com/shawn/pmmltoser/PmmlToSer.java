@@ -13,11 +13,11 @@ import java.io.*;
  */
 public class PmmlToSer {
     public static void main(String[] args) throws FileNotFoundException, JAXBException, SAXException {
-        InputStream is = new FileInputStream("F:\\PythonEXP\\SensorDataSetAnalysis\\MLPClassifier.pmml");
+        InputStream is = new FileInputStream("F:\\PythonEXP\\SensorDataSetAnalysis\\RandomForestClassifier.pmml");
         PMML pmml = org.jpmml.model.PMMLUtil.unmarshal(is);
         LocatorNullifier locatorNullifier = new LocatorNullifier();
         locatorNullifier.applyTo(pmml);
-        OutputStream os = new FileOutputStream("F:\\PythonEXP\\SensorDataSetAnalysis\\MLPClassifier.ser");
+        OutputStream os = new FileOutputStream("F:\\PythonEXP\\SensorDataSetAnalysis\\RandomForestClassifier.ser");
         try {
             SerializationUtil.serializePMML(pmml,os);
         } catch (IOException e) {

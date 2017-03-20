@@ -3,8 +3,10 @@ package com.shawn.pmmltoser;
 import org.dmg.pmml.FieldName;
 import org.dmg.pmml.PMML;
 import org.dmg.pmml.neural_network.NeuralNetwork;
+import org.dmg.pmml.tree.TreeModel;
 import org.jpmml.evaluator.*;
 import org.jpmml.evaluator.neural_network.NeuralNetworkEvaluator;
+import org.jpmml.evaluator.tree.TreeModelEvaluator;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -34,10 +36,10 @@ public class PmmlTest {
     }
 
     public static void main(String[] args) throws Exception {
-        InputStream is = new FileInputStream("F:\\PythonEXP\\SensorDataSetAnalysis\\MLPClassifier.pmml");
+        InputStream is = new FileInputStream("F:\\PythonEXP\\SensorDataSetAnalysis\\RandomForestClassifier.pmml");
         PMML pmml = org.jpmml.model.PMMLUtil.unmarshal(is);
-
-        ModelEvaluator<NeuralNetwork> modelEvaluator = new NeuralNetworkEvaluator(pmml);
+        ModelEvaluatorFactory modelEvaluatorFactory = ModelEvaluatorFactory.newInstance();
+        ModelEvaluator<?> modelEvaluator = modelEvaluatorFactory.newModelEvaluator(pmml);
         Evaluator evaluator = modelEvaluator;
         Map<String, Double> data = new HashMap<>();
         double[] list = {-1.3024458,6.703765,7.431602,0.04765341,-0.23822932,-0.074155025,-0.616218,6.070806,7.6769786};
