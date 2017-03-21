@@ -91,4 +91,4 @@ if score > .948:
 # ensemble.GradientBoostingClassifier   Accuracy: 0.68 (+/- 0.23)   0.911098348464
 # tree.ExtraTreeClassifier              Accuracy: 0.72 (+/- 0.17)   0.910141149964
 # tree.DecisionTreeClassifier           Accuracy: 0.72 (+/- 0.17)   0.911834655004
-# neural_network.MLPClassifier          Accuracy: 0.75 (+/- 0.14)   0.918638127425
+# neural_network.MLPClassifier          Accuracy: 0.82 (+/- 0.15)   0.950107868908
