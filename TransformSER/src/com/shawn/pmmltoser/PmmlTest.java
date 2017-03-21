@@ -36,9 +36,9 @@ public class PmmlTest {
     }
 
     public static Map<String, Double> linearData(Map<String, Double> data, double[] list, String type) {
-        double a = Math.abs(list[0] - list[6]);
-        double b = Math.abs(list[1] - list[7]);
-        double c = Math.abs(list[2] - list[8]);
+        double a = Math.abs(list[0] - list[3]);
+        double b = Math.abs(list[1] - list[4]);
+        double c = Math.abs(list[2] - list[5]);
         double v = Math.pow(a, 2) + Math.pow(b, 2) + Math.pow(c, 2);
         String strX = type + "X";
         String strY = type + "Y";
@@ -52,16 +52,18 @@ public class PmmlTest {
     }
 
     public static void main(String[] args) throws Exception {
-        InputStream is = new FileInputStream("F:\\PythonEXP\\SensorDataSetAnalysis\\models\\MLPClassifier.ser");
+        InputStream is = new FileInputStream("F:\\PythonEXP\\SensorDataSetAnalysis\\models\\MLPClassifier.pmml");
         PMML pmml = org.jpmml.model.PMMLUtil.unmarshal(is);
         ModelEvaluatorFactory modelEvaluatorFactory = ModelEvaluatorFactory.newInstance();
         ModelEvaluator<?> modelEvaluator = modelEvaluatorFactory.newModelEvaluator(pmml);
         Evaluator evaluator = modelEvaluator;
         Map<String, Double> data = new HashMap<>();
-        double[] list = {-1.3024458,6.703765,7.431602,0.04765341,-0.23822932,-0.074155025,-0.616218,6.070806,7.6769786};
+        double[] list = {
+                4.711789,0.038307,8.504204,
+                4.706174,0.017293,8.603604
+        };
         analysisData(data, list[0], list[1], list[2], "Accelerometer");
-//        analysisData(data, list[3], list[4], list[5], "Gyroscope");
-        analysisData(data, list[6], list[7], list[8], "Gravity");
+        analysisData(data, list[3], list[4], list[5], "Gravity");
         linearData(data, list, "Linear");
         Map<FieldName, FieldValue> arguments = new LinkedHashMap<>();
         List<InputField> inputFields = evaluator.getInputFields();
@@ -77,14 +79,6 @@ public class PmmlTest {
                 str = data.get("AccelerometerZ");
             } else if (inputFieldName.toString().equals("Accelerometer_value")) {
                 str = data.get("Accelerometer_value");
-//            } else if (inputFieldName.toString().equals("GyroscopeX")) {
-//                str = data.get("GyroscopeX");
-//            } else if (inputFieldName.toString().equals("GyroscopeY")) {
-//                str = data.get("GyroscopeY");
-//            } else if (inputFieldName.toString().equals("GyroscopeZ")) {
-//                str = data.get("GyroscopeZ");
-//            } else if (inputFieldName.toString().equals("Gyroscope_value")) {
-//                str = data.get("Gyroscope_value");
             } else if (inputFieldName.toString().equals("GravityX")) {
                 str = data.get("GravityX");
             } else if (inputFieldName.toString().equals("GravityY")) {
