@@ -82,7 +82,7 @@ print(score)
 y_pred = predictions.predict(X_test)
 print(metrics.confusion_matrix(y_test, y_pred))
 
-if score > .945:
+if score > .948:
     sklearn2pmml(predictions, "./models/MLPClassifier.pmml")
 
 # neighbors.KNeighborsClassifier        Accuracy: 0.74 (+/- 0.15)   0.931170064721
