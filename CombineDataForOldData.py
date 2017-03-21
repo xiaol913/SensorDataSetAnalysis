@@ -49,9 +49,9 @@ def read_data_test(files, activity):
     return df
 
 
-InVehicle = glob.glob("./InVehicle/*")
-Still = glob.glob("./Still/*")
-Walking = glob.glob("./Walking/*")
+InVehicle = glob.glob("./old_data_set/InVehicle/*")
+Still = glob.glob("./old_data_set/Still/*")
+Walking = glob.glob("./old_data_set/Walking/*")
 
 # combine train data
 train_data = pd.DataFrame()
@@ -61,7 +61,7 @@ train_wd = read_data_train(Walking, 2)
 train_data = train_data.append(train_vd)
 train_data = train_data.append(train_sd)
 train_data = train_data.append(train_wd)
-train_data.to_csv('train_data.csv')
+train_data.to_csv('./old_data_set/train_data.csv')
 
 # combine test data
 test_data = pd.DataFrame()
@@ -71,7 +71,7 @@ test_wd = read_data_test_no_result(Walking)
 test_data = test_data.append(test_vd)
 test_data = test_data.append(test_sd)
 test_data = test_data.append(test_wd)
-test_data.to_csv('test_data.csv')
+test_data.to_csv('./old_data_set/test_data.csv')
 
 # combine result data
 result_data = pd.DataFrame()
@@ -81,4 +81,4 @@ result_wd = read_data_test(Walking, 2)
 result_data = result_data.append(result_vd)
 result_data = result_data.append(result_sd)
 result_data = result_data.append(result_wd)
-result_data.to_csv('result_data.csv')
+result_data.to_csv('./old_data_set/result_data.csv')
