@@ -136,7 +136,6 @@ public class PmmlNewTest {
             try {
                 inputFieldValue = inputField.prepare(str);
             }catch (Exception e){
-
             }
             arguments.put(inputFieldName, inputFieldValue);
         }
