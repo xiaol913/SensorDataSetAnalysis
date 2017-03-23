@@ -7,11 +7,38 @@ import pandas as pd
 plt.style.use('ggplot')
 
 
-# 数据标准化
-def feature_normalize(dataset):
-    mu = np.mean(dataset, axis=0)
-    sigma = np.std(dataset, axis=0)
-    return (dataset - mu) / sigma
+# 处理数据
+def analysis_data(data_set):
+    data_set['LinearX'] = abs(data_set['AccelerometerX'] - data_set['GravityX'])
+    data_set['LinearY'] = abs(data_set['AccelerometerY'] - data_set['GravityY'])
+    data_set['LinearZ'] = abs(data_set['AccelerometerZ'] - data_set['GravityZ'])
+    data_set['Linear'] = data_set['LinearX'] ** 2 + \
+                               data_set['LinearY'] ** 2 + \
+                               data_set['LinearZ'] ** 2
+    data_set['AccelerometerX'] = abs(data_set['AccelerometerX'])
+    data_set['AccelerometerY'] = abs(data_set['AccelerometerY'])
+    data_set['AccelerometerZ'] = abs(data_set['AccelerometerZ'])
+    data_set['Accelerometer'] = data_set['AccelerometerX'] ** 2 + \
+                                data_set['AccelerometerY'] ** 2 + \
+                                data_set['AccelerometerZ'] ** 2
+    data_set['GravityX'] = abs(data_set['GravityX'])
+    data_set['GravityY'] = abs(data_set['GravityY'])
+    data_set['GravityZ'] = abs(data_set['GravityZ'])
+    data_set['Gravity'] = data_set['GravityX'] ** 2 + \
+                                data_set['GravityY'] ** 2 + \
+                                data_set['GravityZ'] ** 2
+    return data_set
+
+
+def plot_activity(activity, data):
+    fig, (ax0, ax1, ax2) = plt.subplots(nrows=3, figsize=(15, 10), sharex=True)
+    plot_axis(ax0, data['Timestamp'], data['Accelerometer'], 'Accelerometer')
+    plot_axis(ax1, data['Timestamp'], data['Linear'], 'Linear')
+    plot_axis(ax2, data['Timestamp'], data['Gravity'], 'Gravity')
+    plt.subplots_adjust(hspace=0.2)
+    fig.suptitle(activity)
+    plt.subplots_adjust(top=0.90)
+    plt.show()
 
 
 # 绘图
@@ -24,37 +51,17 @@ def plot_axis(ax, x, y, title):
     ax.grid(True)
 
 
-# 为给定的行为画出一段时间（180 × 50ms）的波形图
-def plot_activity(activity, data):
-    fig, (ax0, ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8) = plt.subplots(nrows=9, figsize=(15, 10), sharex=True)
-    plot_axis(ax0, data['Timestamp'], data['AccelerometerX'], 'AccelerometerX')
-    plot_axis(ax1, data['Timestamp'], data['AccelerometerY'], 'AccelerometerY')
-    plot_axis(ax2, data['Timestamp'], data['AccelerometerZ'], 'AccelerometerZ')
-    plot_axis(ax3, data['Timestamp'], data['GyroscopeX'], 'GyroscopeX')
-    plot_axis(ax4, data['Timestamp'], data['GyroscopeY'], 'GyroscopeY')
-    plot_axis(ax5, data['Timestamp'], data['GyroscopeZ'], 'GyroscopeZ')
-    plot_axis(ax6, data['Timestamp'], data['GravityX'], 'GravityX')
-    plot_axis(ax7, data['Timestamp'], data['GravityY'], 'GravityY')
-    plot_axis(ax8, data['Timestamp'], data['GravityZ'], 'GravityZ')
-    plt.subplots_adjust(hspace=0.2)
-    fig.suptitle(activity)
-    plt.subplots_adjust(top=0.90)
-    plt.show()
-
-
-data_set = pd.read_csv('train_data.csv')
-
-data_set['AccelerometerX'] = feature_normalize(data_set['AccelerometerX'])
-data_set['AccelerometerY'] = feature_normalize(data_set['AccelerometerY'])
-data_set['AccelerometerZ'] = feature_normalize(data_set['AccelerometerZ'])
-data_set['GyroscopeX'] = feature_normalize(data_set['GyroscopeX'])
-data_set['GyroscopeY'] = feature_normalize(data_set['GyroscopeY'])
-data_set['GyroscopeZ'] = feature_normalize(data_set['GyroscopeZ'])
-data_set['GravityX'] = feature_normalize(data_set['GravityX'])
-data_set['GravityY'] = feature_normalize(data_set['GravityY'])
-data_set['GravityZ'] = feature_normalize(data_set['GravityZ'])
+data_set = pd.read_csv('raw_data.csv')
+data_set = analysis_data(data_set)
 
 # 为每个行为绘图
 for activity in np.unique(data_set["Activity"]):
-    subset = data_set[data_set["Activity"] == activity][:500]
+    subset = data_set[data_set["Activity"] == activity][:]
+    if activity == 0:
+        activity = "OnFeet"
+    elif activity == 1:
+        activity = "Still"
+    elif activity == 2:
+        activity = "InVehicle"
+
     plot_activity(activity, subset)

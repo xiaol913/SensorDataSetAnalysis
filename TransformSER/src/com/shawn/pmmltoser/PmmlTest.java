@@ -96,33 +96,33 @@ public class PmmlTest {
             } else if (inputFieldName.toString().equals("Linear_value")) {
                 str = data.get("Linear_value");
             }
-            System.out.println(str);
-            inputFieldValue = inputField.prepare(str);
-            arguments.put(inputFieldName, inputFieldValue);
-        }
-        Map<FieldName, ?> results = evaluator.evaluate(arguments);
-        List<TargetField> targetFields = evaluator.getTargetFields();
-        Object targetFieldValue = null;
-        for (TargetField targetField : targetFields) {
-            FieldName targetFieldName = targetField.getName();
-            targetFieldValue = results.get(targetFieldName);
-        }
-        Object unboxedTargetFieldValue = null;
-        if (targetFieldValue instanceof Computable) {
-            Computable computable = (Computable) targetFieldValue;
-
-            unboxedTargetFieldValue = computable.getResult();
-        }
-        switch (unboxedTargetFieldValue.toString()) {
-            case "2":
-                System.out.println("InVehicle");
-                break;
-            case "1":
-                System.out.println("Still");
-                break;
-            case "0":
-                System.out.println("OnFeet");
-                break;
+            System.out.println(inputField);
+//            inputFieldValue = inputField.prepare(str);
+//            arguments.put(inputFieldName, inputFieldValue);
+//        }
+//        Map<FieldName, ?> results = evaluator.evaluate(arguments);
+//        List<TargetField> targetFields = evaluator.getTargetFields();
+//        Object targetFieldValue = null;
+//        for (TargetField targetField : targetFields) {
+//            FieldName targetFieldName = targetField.getName();
+//            targetFieldValue = results.get(targetFieldName);
+//        }
+//        Object unboxedTargetFieldValue = null;
+//        if (targetFieldValue instanceof Computable) {
+//            Computable computable = (Computable) targetFieldValue;
+//
+//            unboxedTargetFieldValue = computable.getResult();
+//        }
+//        switch (unboxedTargetFieldValue.toString()) {
+//            case "2":
+//                System.out.println("InVehicle");
+//                break;
+//            case "1":
+//                System.out.println("Still");
+//                break;
+//            case "0":
+//                System.out.println("OnFeet");
+//                break;
         }
     }
 }
