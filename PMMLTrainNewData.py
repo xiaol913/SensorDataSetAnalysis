@@ -51,16 +51,19 @@ def analyze_data(data_set, activity):
 
     for i in range(0, 3125):
         new = pd.DataFrame()
-        new['AccelerometerX'] = normalize_data(data_set[i*40:((i+1)*40)]['AccelerometerX'])
-        new['AccelerometerY'] = normalize_data(data_set[i*40:((i+1)*40)]['AccelerometerY'])
-        new['AccelerometerZ'] = normalize_data(data_set[i*40:((i+1)*40)]['AccelerometerZ'])
-        new['GravityX'] = normalize_data(data_set[i*40:((i+1)*40)]['GravityX'])
-        new['GravityY'] = normalize_data(data_set[i*40:((i+1)*40)]['GravityY'])
-        new['GravityZ'] = normalize_data(data_set[i*40:((i+1)*40)]['GravityZ'])
-        new['LinearX'] = normalize_data(data_set[i*40:((i+1)*40)]['LinearX'])
-        new['LinearY'] = normalize_data(data_set[i*40:((i+1)*40)]['LinearY'])
-        new['LinearZ'] = normalize_data(data_set[i*40:((i+1)*40)]['LinearZ'])
-        if math.isnan(new['AccelerometerX'].max()) | math.isnan(new['AccelerometerY'].max()) | math.isnan(new['AccelerometerZ'].max()) | math.isnan(new['GravityX'].max()) | math.isnan(new['GravityY'].max()) | math.isnan(new['GravityZ'].max()) | math.isnan(new['LinearX'].max()) | math.isnan(new['LinearY'].max()) | math.isnan(new['LinearZ'].max()):
+        new['AccelerometerX'] = normalize_data(data_set[i * 40:((i + 1) * 40)]['AccelerometerX'])
+        new['AccelerometerY'] = normalize_data(data_set[i * 40:((i + 1) * 40)]['AccelerometerY'])
+        new['AccelerometerZ'] = normalize_data(data_set[i * 40:((i + 1) * 40)]['AccelerometerZ'])
+        new['GravityX'] = normalize_data(data_set[i * 40:((i + 1) * 40)]['GravityX'])
+        new['GravityY'] = normalize_data(data_set[i * 40:((i + 1) * 40)]['GravityY'])
+        new['GravityZ'] = normalize_data(data_set[i * 40:((i + 1) * 40)]['GravityZ'])
+        new['LinearX'] = normalize_data(data_set[i * 40:((i + 1) * 40)]['LinearX'])
+        new['LinearY'] = normalize_data(data_set[i * 40:((i + 1) * 40)]['LinearY'])
+        new['LinearZ'] = normalize_data(data_set[i * 40:((i + 1) * 40)]['LinearZ'])
+        if math.isnan(new['AccelerometerX'].max()) | math.isnan(new['AccelerometerY'].max()) | math.isnan(
+                new['AccelerometerZ'].max()) | math.isnan(new['GravityX'].max()) | math.isnan(
+            new['GravityY'].max()) | math.isnan(new['GravityZ'].max()) | math.isnan(
+            new['LinearX'].max()) | math.isnan(new['LinearY'].max()) | math.isnan(new['LinearZ'].max()):
             continue
 
         AX_max.append(new['AccelerometerX'].max())
@@ -115,8 +118,8 @@ del raw_data['Timestamp']
 
 # new = pd.DataFrame()
 feet_data = analyze_data(raw_data[raw_data['Activity'] == 0][:125000], 0)
-still_data = analyze_data(raw_data[raw_data['Activity'] == 1][:125000], 0)
-vehicle_data = analyze_data(raw_data[raw_data['Activity'] == 2][:125000], 0)
+still_data = analyze_data(raw_data[raw_data['Activity'] == 1][:125000], 1)
+vehicle_data = analyze_data(raw_data[raw_data['Activity'] == 2][:125000], 2)
 # print(feet_data)
 
 df = pd.DataFrame()
@@ -124,42 +127,42 @@ df = df.append(feet_data, ignore_index=True)
 df = df.append(still_data, ignore_index=True)
 df = df.append(vehicle_data, ignore_index=True)
 
-print(df)
-#
-# X = new_data[['AccelerometerX', 'AccelerometerY', 'AccelerometerZ',
-#               'GravityX', 'GravityY', 'GravityZ',
-#               'LinearX', 'LinearY', 'LinearZ',
-#               ]]
-# y = new_data[['Activity']]
-# train_pipeline = PMMLPipeline([
-#     ("mapper", DataFrameMapper([
-#         (['AccelerometerX', 'AccelerometerY', 'AccelerometerZ',
-#               'GravityX', 'GravityY', 'GravityZ',
-#               'LinearX', 'LinearY', 'LinearZ',
-#           ],
-#          [ContinuousDomain(), StandardScaler()])
-#     ])),
-#     ("pca", PCA(n_components=9)),
-#     ("selector", SelectKBest(k=9)),
-#     ("classifier", MLPClassifier())
-# ])
-#
-# # predictions = cross_val_predict(train_pipeline, X, y.values.ravel(), cv=10)
-# # print(metrics.accuracy_score(y.values.ravel(), predictions))
-# # print(metrics.confusion_matrix(y.values.ravel(), predictions))
-#
-# # scores = cross_val_score(train_pipeline, X, y.values.ravel(), cv=5)
-# # print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
-#
-# X_train, X_test, y_train, y_test = train_test_split(X, y.values.ravel(), test_size=0.3, random_state=0)
-# predictions = train_pipeline.fit(X_train, y_train)
-# score = predictions.score(X_test, y_test)
-# print(score)
-# y_pred = predictions.predict(X_test)
-# print(metrics.confusion_matrix(y_test, y_pred))
-#
-# if score > .95:
-#     sklearn2pmml(predictions, "./models/MLPClassifier_new.pmml")
-#
-# # neural_network.MLPClassifier          Accuracy: 0.82 (+/- 0.15)   0.950107868908
-# # neural_network.MLPClassifier_new      Accuracy: 0.79 (+/- 0.39)   0.96944
+# print(df)
+
+X = df[['AX_max', 'AX_min', 'AY_max', 'AY_min', 'AZ_max', 'AZ_min',
+        'GX_max', 'GX_min', 'GY_max', 'GY_min', 'GZ_max', 'GZ_min',
+        'LX_max', 'LX_min', 'LY_max', 'LY_min', 'LZ_max', 'LZ_min',
+        ]]
+y = df[['Activity']]
+train_pipeline = PMMLPipeline([
+    ("mapper", DataFrameMapper([
+        (['AX_max', 'AX_min', 'AY_max', 'AY_min', 'AZ_max', 'AZ_min',
+          'GX_max', 'GX_min', 'GY_max', 'GY_min', 'GZ_max', 'GZ_min',
+          'LX_max', 'LX_min', 'LY_max', 'LY_min', 'LZ_max', 'LZ_min',
+          ],
+         [ContinuousDomain(), StandardScaler()])
+    ])),
+    ("pca", PCA(n_components=18)),
+    ("selector", SelectKBest(k=18)),
+    ("classifier", MLPClassifier())
+])
+
+# predictions = cross_val_predict(train_pipeline, X, y.values.ravel(), cv=10)
+# print(metrics.accuracy_score(y.values.ravel(), predictions))
+# print(metrics.confusion_matrix(y.values.ravel(), predictions))
+
+# scores = cross_val_score(train_pipeline, X, y.values.ravel(), cv=5)
+# print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
+
+X_train, X_test, y_train, y_test = train_test_split(X, y.values.ravel(), test_size=0.3, random_state=0)
+predictions = train_pipeline.fit(X_train, y_train)
+score = predictions.score(X_test, y_test)
+print(score)
+y_pred = predictions.predict(X_test)
+print(metrics.confusion_matrix(y_test, y_pred))
+
+if score > .95:
+    sklearn2pmml(predictions, "./models/MLPClassifier_new.pmml")
+
+# neural_network.MLPClassifier          Accuracy: 0.82 (+/- 0.15)   0.950107868908
+# neural_network.MLPClassifier_new      Accuracy: 0.79 (+/- 0.39)   0.96944
