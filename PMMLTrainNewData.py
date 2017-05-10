@@ -161,8 +161,8 @@ print(score)
 y_pred = predictions.predict(X_test)
 print(metrics.confusion_matrix(y_test, y_pred))
 
-if score > .95:
-    sklearn2pmml(predictions, "./models/MLPClassifier_new.pmml")
+# if score > .95:
+sklearn2pmml(predictions, "./models/MLPClassifier_new.pmml")
 
 # neural_network.MLPClassifier          Accuracy: 0.82 (+/- 0.15)   0.950107868908
 # neural_network.MLPClassifier_new      Accuracy: 0.79 (+/- 0.39)   0.96944
