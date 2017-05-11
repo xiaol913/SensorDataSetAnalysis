@@ -17,36 +17,61 @@ import java.util.*;
  * Created by ShawnG on 2017/3/20.
  */
 public class PmmlNewTest {
-    public static double[][] normalize(double[][] values){
-        double[] mean = {
-                0.172987568246,-0.59553202046,4.46550770779,
-                -0.149157725964,-0.62031950318,4.43278505239,
-                0.32214529421,0.0247874827203,0.0327226553929
-        };
-        double[] std = {
-                2.465133,3.433202,7.775168,
-                2.830752,3.278206,7.572936,
-                1.884442,1.235964,1.079798
-        };
+    public static double[] normalize(double[][] values){
+        double[] mean = new double[9];
+        double[] std = new double[9];
         double[][] result = new double[values.length][9];
+        double[] res_data = new double[18];
+
+        for (int column = 0; column < 9; column++){
+            double sum = 0;
+            for (int row = 0; row < values.length; row++){
+                sum = sum + values[row][column];
+            }
+            mean[column] = sum / values.length;
+            double sum_1 = 0;
+            for (int row_1 = 0; row_1 < values.length; row_1++){
+                sum_1 = sum_1 + (values[row_1][column] - mean[column])*(values[row_1][column] - mean[column]);
+            }
+            std[column] = Math.sqrt((sum_1/values.length));
+        }
+
         for (int i = 0; i < values.length; i++) {
-            for (int j = 0; j < mean.length; j++) {
+            for (int j = 0; j < 9; j++) {
                 result[i][j] = (values[i][j] - mean[j])/std[j];
             }
         }
-        return result;
+
+        int index = 0;
+        for (int i = 0; i < 9; i++) {
+            double max = result[i][0];
+            double min = result[i][0];
+            for (int j = 0; j < values.length; j++) {
+                if (values[j][i]>max){
+                    max = values[j][i];
+                }
+                if (values[j][i]<min){
+                    min = values[j][i];
+                }
+            }
+            res_data[index] = max;
+            index++;
+            res_data[index] = min;
+            index++;
+        }
+        return res_data;
     }
 
     public static double[][] readList(){
         BufferedReader reader = null;
-        double[][] values = new double[1000][12];
-        double[][] result = new double[1000][9];
+        double[][] values = new double[40][12];
+        double[][] result = new double[40][9];
         int i = 0;
         try {
             reader = new BufferedReader(new FileReader("F:\\PythonEXP\\SensorDataSetAnalysis\\data_set\\raw_data.csv"));
             reader.readLine();
             String line = null;
-            while (i<1000 && (line=reader.readLine())!=null){
+            while (i<40 && (line=reader.readLine())!=null){
                 String item[] = line.split(",");
                 for (int j = 0; j< item.length;j++) {
                     double value = Double.parseDouble(item[j]);
@@ -73,64 +98,78 @@ public class PmmlNewTest {
         return result;
     }
 
-    public static Map<String, Double> analysisData(Map<String, Double> data, double[] list, String type) {
-        double x = 0;
-        double y = 0;
-        double z = 0;
-        if (type.equals("Accelerometer")){
-            x = list[0];
-            y = list[1];
-            z = list[2];
-        }else if (type.equals("Gravity")){
-            x = list[3];
-            y = list[4];
-            z = list[5];
-        }else if (type.equals("Linear")){
-            x = list[6];
-            y = list[7];
-            z = list[8];
-        }
-        String strX = type + "X";
-        String strY = type + "Y";
-        String strZ = type + "Z";
-        data.put(strX, x);
-        data.put(strY, y);
-        data.put(strZ, z);
+    public static Map<String, Double> analysisData(Map<String, Double> data, double[] list) {
+        data.put("AX_max", list[0]);
+        data.put("AX_min", list[1]);
+        data.put("AY_max", list[2]);
+        data.put("AY_min", list[3]);
+        data.put("AZ_max", list[4]);
+        data.put("AZ_min", list[5]);
+
+        data.put("GX_max", list[6]);
+        data.put("GX_min", list[7]);
+        data.put("GY_max", list[8]);
+        data.put("GY_min", list[9]);
+        data.put("GZ_max", list[10]);
+        data.put("GZ_min", list[11]);
+
+        data.put("LX_max", list[12]);
+        data.put("LX_min", list[13]);
+        data.put("LY_max", list[14]);
+        data.put("LY_min", list[15]);
+        data.put("LZ_max", list[16]);
+        data.put("LZ_min", list[17]);
         return data;
     }
 
-    public static int readModel(double[] list, PMML pmml){
+    public static String readModel(double[] list, PMML pmml){
         ModelEvaluatorFactory modelEvaluatorFactory = ModelEvaluatorFactory.newInstance();
         ModelEvaluator<?> modelEvaluator = modelEvaluatorFactory.newModelEvaluator(pmml);
         Evaluator evaluator = modelEvaluator;
         Map<String, Double> data = new HashMap<>();
-        analysisData(data, list,"Accelerometer");
-        analysisData(data, list,"Gravity");
-        analysisData(data, list,"Linear");
+        analysisData(data, list);
         Map<FieldName, FieldValue> arguments = new LinkedHashMap<>();
         List<InputField> inputFields = evaluator.getInputFields();
         FieldValue inputFieldValue = null;
         for (InputField inputField : inputFields) {
             FieldName inputFieldName = inputField.getName();
             Object str = null;
-            if (inputFieldName.toString().equals("AccelerometerX")) {
-                str = data.get("AccelerometerX");
-            } else if (inputFieldName.toString().equals("AccelerometerY")) {
-                str = data.get("AccelerometerY");
-            } else if (inputFieldName.toString().equals("AccelerometerZ")) {
-                str = data.get("AccelerometerZ");
-            } else if (inputFieldName.toString().equals("GravityX")) {
-                str = data.get("GravityX");
-            } else if (inputFieldName.toString().equals("GravityY")) {
-                str = data.get("GravityY");
-            } else if (inputFieldName.toString().equals("GravityZ")) {
-                str = data.get("GravityZ");
-            } else if (inputFieldName.toString().equals("LinearX")) {
-                str = data.get("LinearX");
-            } else if (inputFieldName.toString().equals("LinearY")) {
-                str = data.get("LinearY");
-            } else if (inputFieldName.toString().equals("LinearZ")) {
-                str = data.get("LinearZ");
+            if (inputFieldName.toString().equals("AX_max")) {
+                str = data.get("AX_max");
+            } else if (inputFieldName.toString().equals("AX_min")) {
+                str = data.get("AX_min");
+            } else if (inputFieldName.toString().equals("AY_max")) {
+                str = data.get("AY_max");
+            } else if (inputFieldName.toString().equals("AY_min")) {
+                str = data.get("AY_min");
+            } else if (inputFieldName.toString().equals("AZ_max")) {
+                str = data.get("AZ_max");
+            } else if (inputFieldName.toString().equals("AZ_min")) {
+                str = data.get("AZ_min");
+            } else if (inputFieldName.toString().equals("GX_max")) {
+                str = data.get("GX_max");
+            } else if (inputFieldName.toString().equals("GX_min")) {
+                str = data.get("GX_min");
+            } else if (inputFieldName.toString().equals("GY_max")) {
+                str = data.get("GY_max");
+            } else if (inputFieldName.toString().equals("GY_min")) {
+                str = data.get("GY_min");
+            } else if (inputFieldName.toString().equals("GZ_max")) {
+                str = data.get("GZ_max");
+            } else if (inputFieldName.toString().equals("GZ_min")) {
+                str = data.get("GZ_min");
+            } else if (inputFieldName.toString().equals("LX_max")) {
+                str = data.get("LX_max");
+            } else if (inputFieldName.toString().equals("LX_min")) {
+                str = data.get("LX_min");
+            } else if (inputFieldName.toString().equals("LY_max")) {
+                str = data.get("LY_max");
+            } else if (inputFieldName.toString().equals("LY_min")) {
+                str = data.get("LY_min");
+            } else if (inputFieldName.toString().equals("LZ_max")) {
+                str = data.get("LZ_max");
+            } else if (inputFieldName.toString().equals("LZ_min")) {
+                str = data.get("LZ_min");
             }
 //            System.out.println(str);
             try {
@@ -152,51 +191,15 @@ public class PmmlNewTest {
 
             unboxedTargetFieldValue = computable.getResult();
         }
-        int code = 0;
-        switch (unboxedTargetFieldValue.toString()) {
-            case "2":
-                code = 2;
-                break;
-            case "1":
-                code = 1;
-                break;
-            case "0":
-                code = 0;
-                break;
-        }
-        return code;
+        return unboxedTargetFieldValue.toString();
     }
 
     public static void main(String[] args) throws FileNotFoundException, JAXBException, SAXException {
         InputStream is = new FileInputStream("F:\\PythonEXP\\SensorDataSetAnalysis\\models\\MLPClassifier_new.pmml");
         PMML pmml = org.jpmml.model.PMMLUtil.unmarshal(is);
         double[][] values = readList();
-        double[][] list = normalize(values);
-        int code;
-        int countF = 0;
-        int countS = 0;
-        int countV = 0;
-//        readModel(list[0],pmml);
-        for (double[] v : list) {
-            code = readModel(v,pmml);
-            switch (code){
-                case 2:
-                    countV++;
-                    break;
-                case 1:
-                    countS++;
-                    break;
-                case 0:
-                    countF++;
-                    break;
-            }
-        }
-        if (countF >= countS && countF >= countV){
-            System.out.println("OnFeet");
-        } else if (countS >= countF && countS >= countV){
-            System.out.println("Still");
-        } else if (countV >= countF && countV >= countS){
-            System.out.println("InVehicle");
-        }
+        double[] list = normalize(values);
+        String code = readModel(list, pmml);
+        System.out.print(code);
     }
 }
